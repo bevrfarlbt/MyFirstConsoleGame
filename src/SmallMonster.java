@@ -3,6 +3,7 @@ import java.util.Scanner;
 
 public class SmallMonster extends Monster {
 
+
     Scanner sc = new Scanner(System.in);
 
     private String image = "ММ";

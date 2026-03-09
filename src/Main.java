@@ -24,7 +24,6 @@ public class Main {
         int countMonster = sizeBoard * sizeBoard - sizeBoard - 5;
         Random r = new Random();
 
-        // для работы сбольшим количеством монстров воспользуемся массивом
         Monster[] arrMonster = new Monster[countMonster + 1];
         int count = 0;
         Monster test;
@@ -41,7 +40,7 @@ public class Main {
                     test = new Monster(sizeBoard);
                     break;
                 default:
-                    test = new Monster(sizeBoard); // на всякий случай
+                    test = new Monster(sizeBoard);
                     break;
             }
             if (board[test.getY()][test.getX()].equals("  ")){
@@ -63,15 +62,14 @@ public class Main {
         Scanner sc = new Scanner(System.in);
         String answer = sc.nextLine();
         System.out.println("Ваш ответ:\t" + answer);
-
-
-
+        
 
         switch (answer) {
             case "ДА" -> {
                 System.out.println("Выбери сложность игры(от 1 до 5):");
                 int difficultGame = sc.nextInt();
                 System.out.println("Выбранная сложность:\t" + difficultGame);
+                boolean gameOver = false;
                 while (true) {
                     board[person.getY() - 1][person.getX() - 1] = person.getImage();
                     outputBoard(board, person.getLive());
@@ -80,7 +78,6 @@ public class Main {
                     int x = sc.nextInt();
                     int y = sc.nextInt();
 
-                    // проверка
                     if (person.moveCorrect(x, y)) {
                         String next = board[y - 1][x - 1];
                         if (next.equals("  ")) {
@@ -92,18 +89,26 @@ public class Main {
                         } else if (next.equals(castle)) {
                             System.out.println("Вы прошли игру!");
                             break;
-                        }else {
+                        } else {
                             for (Monster monster : arrMonster) {
                                 if (monster.conflictPerson(x, y)) {
                                     if (monster.taskMonster(difficultGame)) {
                                         board[person.getY() - 1][person.getX() - 1] = "  ";
                                         person.move(x, y);
-
                                     } else {
                                         person.downLive();
+
+                                        if (person.getLive() <= 0) {
+                                            System.out.println("💀 Ты проиграл! Жизни кончились.");
+                                            gameOver = true;
+                                            break;
+                                        }
                                     }
                                     break;
                                 }
+                            }
+                            if (gameOver) {
+                                break;
                             }
                         }
                     } else {
@@ -114,14 +119,11 @@ public class Main {
             case "НЕТ" -> System.out.println("Жаль, приходи еще!");
             default -> System.out.println("Данные введены неккоректно");
         }
-
     }
-
     static void outputBoard(String[][] board, int live) {
         String leftBlock = "| ";
         String rightBlock = "|";
         String wall = "+ —— + —— + —— + —— + —— +";
-
         for (String[] raw : board) {
             System.out.println(wall);
             for (String col : raw) {
@@ -130,8 +132,6 @@ public class Main {
             System.out.println(rightBlock);
         }
         System.out.println(wall);
-
-
         System.out.println("Количество жизней:\t" + live + "\n");
     }
 }
